@@ -1,0 +1,205 @@
+<div class="head bx--row">
+        <div class="head-text">Welcome to Manager Console</div>
+        <div class="head-right">
+            <button class="bx--btn bx--btn--primary" type="button" (click)="logout()">Logout</button>
+        </div>
+</div>
+<div class="body">
+        <tabset>
+             <tab heading="Resume List" id="tab1">
+                    <div class="uploadrequest">Upload the resume in the format of   <b> FirstName _ LastName </b>   without any spaces</div>
+                    <div class="row">
+                            <div class="col-md-12">
+                                <div class="row card">
+                                    <div class="col-sm-12">
+                                        <h4>Upload Files</h4>
+                                        <div id="fileSelector">
+                                            <input type="file" name="fileUplaod" id="fileUpload"
+                                            multiple ng2FileSelect [uploader]="uploader" accept="application/pdf">
+                                        </div>
+                                        <div>
+                                            <div class="row uploadList" *ngFor="let item of uploader.queue">
+                                                <div class="col-sm-4">{{item.file.name}}</div>
+                                                <div class="col-sm-4">
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-success" 
+                                                        [ngStyle]="{'width':item.progress+'%'}"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                        <button type="button" class="btn btn-dark" (click)="item.upload()">Upload</button>
+                                                        <button type="button" class="btn btn-danger" (click)="item.remove()">Cancel</button>
+                                                </div>
+                                            </div>                        
+                                        </div>
+                                        <div class="row" *ngIf="uploader?.queue?.length > 0">
+                                                <button type="button" class="btn btn-primary" (click)="uploader.uploadAll()">Upload All</button>
+                                        </div>
+                                    </div>                
+                                </div>
+                                <div *ngIf="!filesNotPresent" class="row card">
+                                        <h4>Available Files</h4>
+                                        <div class="table">
+                                                <table id="customers">
+                                                        <tr>
+                                                            <th>File Name</th>
+                                                            <th>Candidate Name</th>
+                                                            <th>Email</th>
+                                                            <th>Experience</th>
+                                                            <th>Contact</th>
+                                                            <th>Action</th>
+                                                            <th>View Message History</th>
+                                                        </tr>
+                                                        <tr *ngFor="let file of fileList">
+                                                            <td>{{file.filename}}</td>
+                                                            <td>{{file.name}}</td>
+                                                            <td>{{file.email}}</td>
+                                                            <td>{{file.experience}}</td>
+                                                            <td>{{file.contact}}</td>
+                                                            <td>
+                                                                <div *ngIf="allowDownload==0 && allowDelete==0">No Permissions Granted</div>
+                                                                <button *ngIf="allowDownload==1" class="bx--btn bx--btn--secondary download" type="button" (click)="download(file.filename)">Download</button>
+                                                                <button *ngIf="allowDelete==1" class="bx--btn bx--btn--secondary" type="button" (click)="delete(file.filename)">Delete</button>
+                                                            </td>
+                                                            <td>
+                                                                <button class="bx--btn bx--btn--secondary" type="button" (click)="openModal(template,file.email)">Chat</button>
+                                                            </td>
+                                                        </tr>
+                                                </table>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+             </tab>
+             <tab heading="Resume Request">
+                <div class="dropdown">
+                    <span>Enter your desired skillset : </span> 
+                    <ng-multiselect-dropdown
+                    [placeholder]="'Select Skills'"
+                    [data]="states"
+                    [(ngModel)]="selected"
+                    [settings]="dropdownSettings"
+                    (onSelect)="onItemSelect($event)"
+                    (onSelectAll)="onSelectAll($event)"
+                    >
+                    </ng-multiselect-dropdown>
+
+                    <button type="button" class="btn btn-primary search" (click)="search(selected)">
+                            Search
+                    </button>
+                    <div *ngIf="loading">
+                        <object type="image/svg+xml" data="../../assets/images/spinner.svg">
+                            Your browser does not support SVG
+                        </object>
+                    </div>
+                </div>
+                <accordion *ngIf="tableShow">
+                    <accordion-group heading="Click here to filter using Experience"
+                                    [panelClass]="customClass"
+                                    [isOpen]="isFirstOpen">
+                                    <button type="button" class="btn btn-primary" (click)="filter(2)">
+                                        0-2 years
+                                    </button>
+                                    <button type="button" class="btn btn-primary" (click)="filter(5)">
+                                        2-5 years
+                                    </button>
+                                    <button type="button" class="btn btn-primary" (click)="filter(6)">
+                                        5 years and above
+                                    </button>
+                                    <button type="button" class="btn btn-primary" (click)="filter(10)">
+                                        All
+                                    </button>
+                    </accordion-group>
+                </accordion>
+                <button *ngIf="tableShow" type="button" class="btn btn-success shortlist" (click)="shortlist()">
+                    Email the shorlisted candidates
+                </button>
+                <div *ngIf="tableShow" class="row card">
+                    <h4>Available Resumes Based on the Request</h4>
+                    <div class="table">
+                            <table id="customers">
+                                    <tr>
+                                        <th>File Name</th>
+                                        <th>Name</th>
+                                        <th>Experience<img src="../../assets/images/sort.png" (click)="sort('experience')"></th>
+                                        <th>Contact</th>
+                                        <th>Email</th>
+                                        <th>Strength<img src="../../assets/images/sort.png" (click)="sort('strength')"></th>
+                                        <th>Actions</th>
+                                        <th>To Do</th>
+                                    </tr>
+                                    <tr *ngFor="let file of fileListStrength">
+                                        <td>{{file.filename}}</td>
+                                        <td>{{file.name}}</td>
+                                        <td>{{file.experience}}</td>
+                                        <td>{{file.contact}}</td>
+                                        <td>{{file.email}}</td>
+                                        <td>{{file.strength}}</td>
+                                        <td>
+                                            <div *ngIf="allowDownload==0 && allowDelete==0">No Permissions Granted</div>
+                                            <button *ngIf="allowDownload==1" class="bx--btn bx--btn--secondary download" type="button" (click)="download(file.filename)">Download</button>
+                                            <button *ngIf="allowDelete==1" class="bx--btn bx--btn--secondary" type="button" (click)="delete(file.filename)">Delete</button>
+                                        </td>
+                                        <td>
+                                            <button *ngIf="!file.shortlisted" class="bx--btn bx--btn--primary" type="button" (click)="file.shortlisted=!file.shortlisted">Shortlist</button>
+                                            <button *ngIf="file.shortlisted" type="button" class="btn btn-warning" (click)="file.shortlisted=!file.shortlisted">Shortlisted</button>
+                                        </td>
+                                    </tr>
+                            </table>
+                    </div>
+                </div>
+             </tab>
+             <tab heading="Resume Classification" (selectTab)="classification()">
+                <div class="row card1">
+                    <h4>Classified Resumes</h4>
+                    <div class="table">
+                            <table id="customers">
+                                    <tr>
+                                        <th>File Name</th>
+                                        <th>Strong At</th>
+                                    </tr>
+                                    <div *ngIf="loading1">
+                                        <object type="image/svg+xml" data="../../assets/images/spinner.svg">
+                                            Your browser does not support SVG
+                                        </object>
+                                    </div>
+                                    <tr *ngFor="let file of StrongclassifyArray">
+                                        <td>{{file.name}}</td>
+                                        <td>{{file.strong}}</td>
+                                    </tr>
+                            </table>
+                    </div>
+                </div>
+             </tab>
+        </tabset>
+</div>
+
+<ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Chat History</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div *ngIf="loading3">
+            <object type="image/svg+xml" data="../../assets/images/spinner.svg">
+                Your browser does not support SVG
+            </object>
+    </div>
+    <div *ngIf="!loading3"  class="modal-body chat_history">
+        <div class="chat-content">
+            <div *ngFor="let history of historyArray" class="history">
+                <br>
+                <div class="date">Date: {{history.date}} <br></div>
+                <div class="sender">Sender: {{history.sender}} <br></div>
+                <div class="receiver">Receiver: {{history.receiver}} <br></div>
+                <div class="body">Body: {{history.body}} <br></div>
+                <br>
+            </div>
+        </div>
+        <form [formGroup]="formdata">
+                <input type="text"  name="message" placeholder="Send Message" formControlName="message">
+        </form>
+        <button class="bx--btn bx--btn--primary" type="button" (click)="sendEmail()">Send</button>
+    </div>
+</ng-template>

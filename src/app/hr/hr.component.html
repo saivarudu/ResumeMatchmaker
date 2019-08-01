@@ -1,0 +1,131 @@
+<div class="head bx--row">
+        <div class="head-text">Welcome to HR Console</div>
+        <div class="head-center">
+                <button class="bx--btn bx--btn--primary" type="button" (click)="openModal(template)">Permission Control</button>
+            </div>
+        <div class="head-right">
+            <button class="bx--btn bx--btn--primary" type="button" (click)="logout()">Logout</button>
+        </div>
+</div>
+<div class="body">
+        <div class="uploadrequest">Upload the resume in the format of   <b> FirstName _ LastName </b>   without any spaces</div>
+        <div class="container-fluid">
+                <div class="row header-section">
+                    <span>Upload and Download Resumes</span>
+                </div>
+            
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <div class="row card">
+                            <div class="col-sm-12">
+                                <h4>Upload Files</h4>
+                                <div id="fileSelector">
+                                    <input type="file" name="fileUplaod" id="fileUpload"
+                                    multiple ng2FileSelect [uploader]="uploader" accept="application/pdf">
+                                </div>
+                                <div>
+                                    <div class="row uploadList" *ngFor="let item of uploader.queue">
+                                        <div class="col-sm-4">{{item.file.name}}</div>
+                                        <div class="col-sm-4">
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" 
+                                                [ngStyle]="{'width':item.progress+'%'}"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                                <button type="button" class="btn btn-dark" (click)="item.upload()">Upload</button>
+                                                <button type="button" class="btn btn-danger" (click)="item.remove()">Cancel</button>
+                                        </div>
+                                    </div>                        
+                                </div>
+                                <div class="row" *ngIf="uploader?.queue?.length > 0">
+                                        <button type="button" class="btn btn-primary" (click)="uploader.uploadAll()">Upload All</button>
+                                </div>
+                            </div>                
+                        </div>
+                        <div *ngIf="!filesNotPresent" class="row card">
+                                <h4>Available Files</h4>
+                                <div class="table">
+                                        <table id="customers">
+                                                <tr>
+                                                    <th>File Name</th>
+                                                    <th>Candidate Name</th>
+                                                    <th>Email</th>
+                                                    <th>Experience</th>
+                                                    <th>Contact</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                <tr *ngFor="let file of fileList">
+                                                    <td>{{file.filename}}</td>
+                                                    <td>{{file.name}}</td>
+                                                    <td>{{file.email}}</td>
+                                                    <td>{{file.experience}}</td>
+                                                    <td>{{file.contact}}</td>
+                                                    <td>
+                                                        <button class="bx--btn bx--btn--secondary download" type="button" (click)="download(file.filename)">Download</button>
+                                                        <button class="bx--btn bx--btn--secondary" type="button" (click)="delete(file.filename)">Delete</button>
+                                                    </td>
+                                                </tr>
+                                        </table>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </div>
+</div>
+
+<ng-template #template>
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">Assign Permissions</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+                <div class="table">
+                        <div *ngIf="myOptions.length==0">
+                            No Managers are added
+                        </div>
+                        <table *ngIf="myOptions.length!==0" id="customers">
+                                <tr>
+                                    <th>Manager Name</th>
+                                    <th>Allow Resume Download</th>
+                                    <th>Allow Resume Delete</th>
+                                </tr>
+                                <tr *ngFor="let option of myOptions">
+                                    <td>{{option.username}}</td>
+                                    <td *ngIf="option.allowdownload==1">Yes</td>
+                                    <td *ngIf="option.allowdownload==0">No</td>
+                                    <td *ngIf="option.allowdelete==1">Yes</td>
+                                    <td *ngIf="option.allowdelete==0">No</td>
+                                </tr>
+                        </table>
+                </div>
+                Select Managers : 
+                <ng-multiselect-dropdown
+                [placeholder]="'Select Managers'"
+                [data]="dropdownList"
+                [(ngModel)]="selectedItems"
+                [settings]="dropdownSettings"
+                (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)"
+                >
+                </ng-multiselect-dropdown>
+        </div>
+        <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="set('notdownload')">
+                        Forbid Download
+                </button>
+                <button type="button" class="btn btn-primary" (click)="set('notdelete')">
+                        Forbid Delete
+                </button>
+                <button type="button" class="btn btn-primary" (click)="set('download')">
+                        Allow Download
+                </button>
+                <button type="button" class="btn btn-primary" (click)="set('delete')">
+                        Allow Delete
+                </button>
+        </div>
+</ng-template>

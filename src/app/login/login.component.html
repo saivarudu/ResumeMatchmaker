@@ -1,0 +1,52 @@
+<app-header></app-header>
+<div class="bx--row">
+    
+    <div class="bx--col bx--col-md-11 image-area">
+    </div>
+
+    <div class="bx--col bx--col-md-1 login-area">
+    <tabset #tabset>
+        <div *ngIf="loginTab">
+            <form [formGroup]="formdata">
+                <div class="loginAs">Login As :
+                    <select formControlName="dropdownTab">
+                        <option value="" disabled selected>Choose your option</option>
+                        <option value="tab1" (click)="onOption(tab1)">Admin</option>
+                        <option value="tab2" (click)="onOption(tab2)">HR</option>
+                        <option value="tab3" (click)="onOption(tab3)">Manager</option>
+                        <option value="tab4" (click)="onOption(tab4)">Employee</option>
+                    </select>
+                </div>
+                <div class="username">Username : <input type="text"  name="username" placeholder="Enter your Username" formControlName="username"></div>
+                <div class="password">Password : <input type="password"  name="password" placeholder="Enter your Password" formControlName="password"></div>
+                <button type="button" class="btn btn-primary" (click)="login()">
+                    Login
+                </button>
+            </form>
+        </div>
+        <div *ngIf="!loginTab">
+            <form [formGroup]="formdata">
+                    <div class="loginAs">Signup As :
+                            <select formControlName="dropdownTabSignup">
+                                <option value="" disabled selected>Choose your option</option>
+                                <option value="tab1" (click)="onOption(tab1)">HR</option>
+                                <option value="tab2" (click)="onOption(tab2)">Manager</option>
+                                <option value="tab3" (click)="onOption(tab3)">Employee</option>
+                            </select>
+                    </div>
+                    <div class="username">Set Username : <input type="text"  name="setusername" placeholder="Enter your Username" formControlName="setusername"></div>
+                    <div class="password">Set Password : <input type="password"  name="setpassword" placeholder="Enter your Password" formControlName="setpassword"></div>
+                    <div class="password">Confirm Password : <input type="password"  name="setconfirmpassword" placeholder="Enter your Password Again" formControlName="setconfirmpassword"></div>
+                    <button type="button" class="btn btn-primary" (click)="signup()">
+                            Signup
+                    </button>
+            </form>
+        </div>
+        <tab heading="Login" id="tab1" (selectTab)="onSelect($event)"></tab>
+        <tab heading="Signup" id="tab2" (selectTab)="onSelect($event)"></tab>
+    </tabset>
+    </div>
+
+</div>
+
+   

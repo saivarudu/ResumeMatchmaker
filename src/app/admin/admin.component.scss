@@ -1,0 +1,47 @@
+.head{
+    margin: 0px;
+    .head-text{
+        font-size: 35px;
+        padding-top: 5px;
+        padding-left: 25px;
+        width: 90.8%;
+    }
+    background-color: cornflowerblue;
+}
+.body{
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.create{
+    margin-top: 30px;
+    height: 70px;
+}
+.table{
+    #customers {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+    
+      #customers td, #customers th {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+      
+      #customers tr:hover {background-color: #ddd;}
+      
+      #customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: darkblue;
+        color: white;
+      }
+}
+.username{
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+.password{
+    padding-bottom: 16px;
+}

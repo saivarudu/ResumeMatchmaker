@@ -1,0 +1,83 @@
+<div class="head bx--row">
+    <div class="head-text">Welcome to Employee Console</div>
+    <div class="head-right">
+        <button class="bx--btn bx--btn--primary" type="button" (click)="logout()">Logout</button>
+    </div>
+</div>
+
+<div class="body">
+        <tabset>
+             <tab heading="Upload Resume" id="tab1">
+                    <div class="uploadrequest">Upload the resume in the format of   <b> FirstName _ LastName </b>   without any spaces</div>
+                    <div class="row">
+                            <div class="col-md-11">
+                                <div class="row card">
+                                    <div class="col-sm-12">
+                                        <h4>Upload Files</h4>
+                                        <div id="fileSelector">
+                                            <input type="file" name="fileUplaod" id="fileUpload"
+                                            multiple ng2FileSelect [uploader]="uploader" accept="application/pdf">
+                                        </div>
+                                        <div>
+                                            <div class="row uploadList" *ngFor="let item of uploader.queue">
+                                                <div class="col-sm-4">{{item.file.name}}</div>
+                                                <div class="col-sm-4">
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-success" 
+                                                        [ngStyle]="{'width':item.progress+'%'}"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                        <button type="button" class="btn btn-dark" (click)="item.upload()">Upload</button>
+                                                        <button type="button" class="btn btn-danger" (click)="item.remove()">Cancel</button>
+                                                </div>
+                                            </div>                        
+                                        </div>
+                                        <div class="row" *ngIf="uploader?.queue?.length > 0">
+                                                <button type="button" class="btn btn-primary" (click)="uploader.uploadAll()">Upload All</button>
+                                        </div>
+                                    </div>                
+                                </div>
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div>
+             </tab>
+             <tab heading="Chat">
+                    <div class="modal-body chat_history">
+                            <form [formGroup]="formdata">
+                                    <input type="text"  name="message" placeholder="Send Message" formControlName="message">
+                            </form>
+                            Select Manager : 
+                            <ng-multiselect-dropdown
+                            [placeholder]="'Select Managers'"
+                            [data]="dropdownList"
+                            [(ngModel)]="selectedItems"
+                            [settings]="dropdownSettings"
+                            (onSelect)="onItemSelect($event)"
+                            (onSelectAll)="onSelectAll($event)"
+                            >
+                            </ng-multiselect-dropdown>
+                            <button class="bx--btn bx--btn--primary" type="button" (click)="sendEmail()">Send</button>
+                            <button *ngIf="!showHistory" class="bx--btn bx--btn--primary view" type="button" (click)="chatOpen(selectedItems)">View History</button>
+                            <button *ngIf="showHistory" class="bx--btn bx--btn--secondary view" type="button" (click)="chatHide()">Hide History</button>
+                        </div>
+                        <div *ngIf="loader">
+                                <object type="image/svg+xml" data="../../assets/images/spinner.svg">
+                                    Your browser does not support SVG
+                                </object>
+                        </div>
+                    <div *ngIf="showHistory" class="chat_history">
+                            <div class="chat-content">
+                                    <div *ngFor="let history of historyArray" class="history" [ngClass]="((history?.sender)!=(loggedUser)) ? 'history' :  'history1'">
+                                        <br>
+                                        <div class="date">Date: {{history.date}} <br></div>
+                                        <div class="sender">Sender: {{history.sender}} <br></div>
+                                        <div class="receiver">Receiver: {{history.receiver}} <br></div>
+                                        <div class="body">Body: {{history.body}} <br></div>
+                                        <br>
+                                    </div>
+                            </div>
+                    </div>
+             </tab>
+        </tabset>
+</div>

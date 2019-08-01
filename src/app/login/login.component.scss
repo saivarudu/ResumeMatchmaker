@@ -1,0 +1,30 @@
+
+form{
+    display: inline-grid;
+    .username{
+        padding-top: 20px;
+    }
+    .password{
+        padding-top: 20px;
+    }
+    .loginAs{
+        padding-top: 20px;
+    }
+}
+button{
+    margin-top: 20px;
+}
+.bx--row{
+    margin: 0px;
+}
+.image-area{
+    padding: 0px;
+}
+.login-area{
+    padding: 0px;
+    padding-left: 20%;
+    padding-top: 5%;
+}
+.last-area{
+    padding: 0px;
+}

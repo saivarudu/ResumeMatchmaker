@@ -1,0 +1,64 @@
+<div class="head bx--row">
+    <div class="head-text">Welcome to Admin Console</div>
+    <div class="head-right">
+        <button class="bx--btn bx--btn--primary" type="button" (click)="logout()">Logout</button>
+    </div>
+</div>
+<div class="body">
+    <div class="create">
+        <button class="bx--btn bx--btn--tertiary" type="button" (click)="openModal(template)">Create Users</button>
+    </div>
+    <div class="table">
+            <table id="customers">
+                    <tr>
+                    <th>Username</th>
+                    <th>User Type</th>
+                    <th>Action</th>
+                    </tr>
+                    <tr *ngFor="let users of userList">
+                    <td>{{users.username}}</td>
+                    <td *ngIf="users.hr==1">HR</td>
+                    <td *ngIf="users.admin==1">Admin</td>
+                    <td *ngIf="users.manager==1">Manager</td>
+                    <td *ngIf="users.employee==1">Employee</td>
+                    <td>
+                        <button class="bx--btn bx--btn--secondary" type="button" (click)="delete(users.username)">Delete</button>
+                    </td>
+                    </tr>
+            </table>
+            <alert *ngIf="deleteSucess" type="success">
+                    <strong>Success!</strong> User has been successfully deleted.
+            </alert>
+            <alert *ngIf="createSucess" type="success">
+                    <strong>Success!</strong> User has been successfully added.
+            </alert>
+    </div>
+</div>
+
+<ng-template #template>
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">Create a New User</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+                <form [formGroup]="formdata">
+                        <div class="loginAs">Set User Type : 
+                                <select formControlName="dropdownTab">
+                                    <option value="" disabled selected>Choose your option</option>
+                                    <option value="tab1" (click)="onOption(tab1)">Admin</option>
+                                    <option value="tab2" (click)="onOption(tab2)">HR</option>
+                                    <option value="tab3" (click)="onOption(tab3)">Manager</option>
+                                    <option value="tab4" (click)="onOption(tab4)">Employee</option>
+                                </select>
+                        </div>
+                        <div class="username">Set Username : <input type="text"  name="setusername" placeholder="Enter your Username" formControlName="setusername"></div>
+                        <div class="password">Set Password : <input type="password"  name="setpassword" placeholder="Enter your Password" formControlName="setpassword"></div>
+                        <div class="password">Confirm Password : <input type="password"  name="setconfirmpassword" placeholder="Enter your Password Again" formControlName="setconfirmpassword"></div>
+                        <button type="button" class="btn btn-primary" (click)="create()">
+                                Create
+                        </button>
+                </form>
+        </div>
+</ng-template>
